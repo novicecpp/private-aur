@@ -1,0 +1,34 @@
+pkgname=cvmfs
+pkgver=2.10.1
+pkgrel=1
+pkgdesc="CernVM-FS Client"
+arch=('x86_64')
+url="https://cernvm.cern.ch/fs/"
+license=('custom:cern')
+depends=(
+    'gawk'
+    'psmisc'
+    'lsof'
+    'autofs'
+    'fuse2'
+    'curl'
+    'attr'
+    'zlib'
+    'gdb'
+)
+optdepends=(
+    'cvmfs-fuse3: CernVM-FS Fuse3'
+)
+source=(
+    "http://ecsft.cern.ch/dist/cvmfs/cvmfs-2.10.1/cvmfs_2.10.1~1+ubuntu22.04_amd64.deb"
+)
+sha512sums=(
+    '2f7dcaf5fd74acb2f595cf06ddd5bb7a80d33ac8611ec8aa8816e8ea0b2cb137bef812c21b34157040997b877ea3d6eac7815b8e544ca611c3538e4b623c48e2'
+)
+
+package() {
+	bsdtar -xf data.tar.zst -C "$pkgdir/"
+
+    mv "$pkgdir/sbin/mount.cvmfs" "$pkgdir/usr/bin"
+    rm -rf "$pkgdir/sbin"
+}

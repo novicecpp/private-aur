@@ -1,0 +1,20 @@
+pkgname=cvmfs-fuse3
+pkgver=2.10.1
+pkgrel=1
+pkgdesc="CernVM-FS FUSE3 Lib"
+arch=('x86_64')
+url="https://cernvm.cern.ch/fs/"
+license=('custom:cern')
+depends=(
+    'fuse3'
+)
+source=(
+    "https://ecsft.cern.ch/dist/cvmfs/cvmfs-2.10.1/cvmfs-fuse3_2.10.1~1+ubuntu22.04_amd64.deb"
+)
+sha512sums=(
+    '4b59789c417e1875b6fd7674831af9310e0b5e779eca1c3c04a3dbe9f254454151fdf6d58a6a4653d346ae060fcfceeb805f2efbf29e0fb697e354f2c1301219'
+)
+
+package() {
+	bsdtar -xf data.tar.zst -C "$pkgdir/"
+}
