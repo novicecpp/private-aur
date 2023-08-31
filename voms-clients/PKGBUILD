@@ -1,0 +1,32 @@
+# Original file from https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=voms-clients
+pkgname=voms-clients
+pkgver=3.3.2
+pkgrel=1
+pkgdesc="Virtual Organization Membership Service (Java-based clients)"
+arch=(any)
+url="http://italiangrid.github.io/voms/"
+depends=(java-runtime)
+makedepends=(java-environment maven)
+source=("https://github.com/italiangrid/voms-clients/archive/refs/tags/v3.3.2.tar.gz")
+sha512sums=('2228e1ee45aac029eaacc8ed859d42ec6668b1d885ab1a7dd2372dfa3fc28814be0edcbea8996f46152fcfed68390dbed8f1526e3d77935de18766748711d4c2')
+
+build() {
+  cd "$pkgname-$pkgver"
+  mvn -Dmaven.javadoc.skip=true \
+      -Dvoms-clients.libs="/usr/share/$pkgname/lib" \
+      package
+}
+
+package() {
+  install -dm 755 "$pkgdir/usr/share/$pkgname"
+  bsdtar -C "$pkgdir/usr" --strip-components 1 -xf "$pkgname-$pkgver/target/voms-clients.tar.gz"
+  mv "$pkgdir/usr/share/java/voms-clients" "$pkgdir/usr/share/$pkgname/lib"
+
+  # rename to avoid conflicts with C clients from voms 2.x
+  #for f in /usr/bin/voms-proxy-{init,info,destroy}; do
+  #  mv "$pkgdir/$f" "$pkgdir/${f/%/3}"
+  #done
+  #for f in /usr/share/man/man1/voms-proxy-{init,info,destroy}.1; do
+  #  mv "$pkgdir/$f" "$pkgdir/${f/%.1/3.1}"
+  #done
+}
