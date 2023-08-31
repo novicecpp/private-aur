@@ -1,0 +1,3 @@
+[submodule "cvmfs"]
+	path = cvmfs
+	url = https://aur.archlinux.org/cvmfs.git
