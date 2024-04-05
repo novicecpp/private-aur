@@ -11,6 +11,8 @@ source=("http://ftp.fr.debian.org/debian/pool/main/p/prometheus-libvirt-exporter
 b2sums=('32d3417a6ae688722f0b01261a1d24afa4fb301ea57bcde4ca140f37954438b4a0740cd01e4a2aa64c2b3391f0b6007880761ddd0b4761b752707c6cbf220c09')
 package() {
 	bsdtar -xf data.tar.xz -C "$pkgdir/"
+    # replace systemd unit user prometheus with libvirt-qemu to libvirt-qemu
+    sed -i '/User=prometheus/c\User=libvirt-qemu' "$pkgdir"/usr/lib/systemd/system/prometheus-libvirt-exporter.service
     # move /lib to /usr
     mv "$pkgdir"/lib "$pkgdir"/usr
     # remove Debian /etc/init.d
