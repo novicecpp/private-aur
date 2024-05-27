@@ -1,0 +1,23 @@
+# original file from https://github.com/tmux/tmux/pull/3958
+diff --git a/compat/systemd.c b/compat/systemd.c
+index 063474e3d..b6b34ab8d 100644
+--- a/compat/systemd.c
++++ b/compat/systemd.c
+@@ -144,6 +144,17 @@ systemd_move_pid_to_new_cgroup(pid_t pid, char **cause)
+ 		goto finish;
+ 	}
+
++	/*
++	 * Make sure that the session shells are terminated with
++	 * SIGHUP since bash and friends tend to ignore SIGTERM
++	 */
++	r = sd_bus_message_append(m, "(sv)", "SendSIGHUP", "b", 1);
++	if (r < 0) {
++		xasprintf(cause, "failed to append to properties: %s",
++		    strerror(-r));
++		goto finish;
++	}
++
+ 	/*
+ 	 * Inherit the slice from the parent process, or default to
+ 	 * "app-tmux.slice" if that fails.

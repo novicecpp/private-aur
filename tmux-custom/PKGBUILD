@@ -1,0 +1,54 @@
+# original file from https://aur.archlinux.org/cgit/aur.git/tree/PKGBUILD?h=tmux-git&id=24461c27a7de769d55a2fa740db2d62605788602
+
+# Maintainer:  WorMzy Tykashi <wormzy.tykashi@gmail.com>
+# Contributor: Dmitry Korzhevin <dkorzhevin AT gmail DOT com>
+# Contributor: C.Coutinho <kikijump[at]gmail[dot]com>
+# Contributor: Grigorios Bouzakis <grbzks[at]gmail[dot]com>
+# Contributor: TDY <tdy@gmx.com>
+
+pkgname=tmux-custom
+_gitname=tmux
+pkgver=3.4_patch
+pkgrel=1
+pkgdesc="A terminal multiplexer"
+url="https://github.com/tmux/tmux/wiki"
+arch=('i686' 'x86_64' 'aarch64')
+license=('BSD-2-Clause' 'BSD-3-Clause' 'ISC')
+depends=('glibc' 'ncurses' 'libevent')
+makedepends=('git')
+#depends+=('libutempter') && _addconfigureflags+="--enable-utempter "
+#depends+=('libutf8proc') && _addconfigureflags+="--enable-utf8proc "
+depends+=('systemd-libs') && _addconfigureflags+="--enable-systemd "
+#depends+=('libsixel') && _addconfigureflags+="--enable-sixel " # Note support by vte (gnome-terminal) yethttps://www.arewesixelyet.com/#gnome-terminal
+provides=('tmux')
+conflicts=('tmux')
+source=('git+https://github.com/tmux/tmux.git#commit=9ae69c3795ab5ef6b4d760f6398cd9281151f632'
+       '3958.diff')
+b2sums=('SKIP'
+        'b04ccdb4346be21be06c9a1394ee8dda47b85257f8bfe77e98ac0467aef631511bc2a6d437c798cf9a538035e5000ed736e07e6650d566853d8b3931c0d5ca03')
+
+prepare() {
+  cp 3958.diff ${_gitname}
+  cd ${_gitname}
+  git apply 3958.diff
+  ./autogen.sh
+}
+
+build() {
+  cd ${_gitname}
+  ./configure --prefix=/usr ${_addconfigureflags} CFLAGS="-O3 -m64 -march=native -mtune=native -pipe -Wall"
+  make -j $(( $(nproc) - 1))
+}
+
+package() {
+  cd ${_gitname}
+
+  make DESTDIR="${pkgdir}" install
+  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  sed -n '2,14p' compat/daemon-darwin.c > "${pkgdir}/usr/share/licenses/${pkgname}/ISC-LICENSE"
+  sed -n '18,45p' compat/daemon-darwin.c > "${pkgdir}/usr/share/licenses/${pkgname}/BSD-2-Clause-LICENSE"
+  sed -n '5,33p' compat/bitstring.h > "${pkgdir}/usr/share/licenses/${pkgname}/BSD-3-Clause-LICENSE"
+
+  # install example config file
+  #install -Dm755 example_tmux.conf "${pkgdir}/usr/share/tmux/example_tmux.conf"
+}
