@@ -22,9 +22,9 @@ depends+=('systemd-libs') && _addconfigureflags+="--enable-systemd "
 #depends+=('libsixel') && _addconfigureflags+="--enable-sixel " # Note support by vte (gnome-terminal) yethttps://www.arewesixelyet.com/#gnome-terminal
 provides=('tmux')
 conflicts=('tmux')
-source=('git+https://github.com/tmux/tmux.git#commit=9ae69c3795ab5ef6b4d760f6398cd9281151f632'
+source=('git+https://github.com/tmux/tmux.git#tag=3.4'
        '3958.diff')
-b2sums=('SKIP'
+b2sums=('cd9ef79da820b5b839f764c0eabf01cae8cc4c6f756139c9bbb1a26a8d69eb6be14fa1b0a384c1b697c08af93a8cea4b73e2df703e6e62c3b8bc737f0b71d481'
         'b04ccdb4346be21be06c9a1394ee8dda47b85257f8bfe77e98ac0467aef631511bc2a6d437c798cf9a538035e5000ed736e07e6650d566853d8b3931c0d5ca03')
 
 prepare() {
