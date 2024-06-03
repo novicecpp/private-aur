@@ -36,8 +36,8 @@ prepare() {
 
 build() {
   cd ${_gitname}
-  ./configure --prefix=/usr ${_addconfigureflags} CFLAGS="-O3 -m64 -march=native -mtune=native -pipe -Wall"
-  make -j $(( $(nproc) - 1))
+  ./configure --prefix=/usr ${_addconfigureflags}
+  make
 }
 
 package() {
