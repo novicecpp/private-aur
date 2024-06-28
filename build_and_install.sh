@@ -14,12 +14,12 @@ pushd $SCRIPT_DIR/${pacman_package_name}
 build_package_ver=$( ( source PKGBUILD; echo $pkgver-$pkgrel ) )
 installed_package_ver=$(pacman -Qim $pacman_package_name  | grep Version | awk -F':' '{print $2}' | awk '{print $1}')
 
-if [[ 0 -eq 1 && $build_package_ver == $installed_package_ver ]]; then
+if [[ $build_package_ver == $installed_package_ver ]]; then
     echo "Package is already installed."
     exit 0
 fi
 echo "Building package..."
-#makepkg -f
+makepkg -f
 echo "Installing package..."
 sudo_cmd=''
 if [[ $(id -n -u) != 'aur_builder' ]]; then
