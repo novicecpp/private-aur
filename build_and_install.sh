@@ -21,8 +21,4 @@ fi
 echo "Building package..."
 makepkg -f
 echo "Installing package..."
-sudo_cmd=''
-if [[ $(id -n -u) != 'aur_builder' ]]; then
-    sudo_cmd="sudo -u aur_builder sudo"
-fi
-$sudo_cmd pacman -U ${pacman_package_name}*.pkg.tar.zst --noconfirm --ask 4
+sudo pacman -U ${pacman_package_name}*.pkg.tar.zst --noconfirm --ask 4
