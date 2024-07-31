@@ -8,7 +8,8 @@
 
 pkgname=tmux-custom
 _gitname=tmux
-pkgver=3.4_patch
+_upstreamver=3.2a
+pkgver=${_upstreamver}
 pkgrel=1
 pkgdesc="A terminal multiplexer"
 url="https://github.com/tmux/tmux/wiki"
@@ -16,21 +17,16 @@ arch=('i686' 'x86_64' 'aarch64')
 license=('BSD-2-Clause' 'BSD-3-Clause' 'ISC')
 depends=('glibc' 'ncurses' 'libevent')
 makedepends=('git')
-#depends+=('libutempter') && _addconfigureflags+="--enable-utempter "
+depends+=('libutempter') && _addconfigureflags+="--enable-utempter "
 #depends+=('libutf8proc') && _addconfigureflags+="--enable-utf8proc "
-depends+=('systemd-libs') && _addconfigureflags+="--enable-systemd "
+#depends+=('systemd-libs') && _addconfigureflags+="--enable-systemd "
 #depends+=('libsixel') && _addconfigureflags+="--enable-sixel " # Note support by vte (gnome-terminal) yethttps://www.arewesixelyet.com/#gnome-terminal
 provides=('tmux')
 conflicts=('tmux')
-source=('git+https://github.com/tmux/tmux.git#tag=3.4'
-       '3958.diff')
-b2sums=('cd9ef79da820b5b839f764c0eabf01cae8cc4c6f756139c9bbb1a26a8d69eb6be14fa1b0a384c1b697c08af93a8cea4b73e2df703e6e62c3b8bc737f0b71d481'
-        'b04ccdb4346be21be06c9a1394ee8dda47b85257f8bfe77e98ac0467aef631511bc2a6d437c798cf9a538035e5000ed736e07e6650d566853d8b3931c0d5ca03')
-
+source=("git+https://github.com/tmux/tmux.git#tag=${_upstreamver}")
+b2sums=('82d25d7ca6bad798d50f1306cb7cb60ee96486721f5b9338c6591ee11c372ab52d0f41d8cbb9d701aa1036feed605d17891c9fa956c1136546b5198c5f5c02b7')
 prepare() {
-  cp 3958.diff ${_gitname}
   cd ${_gitname}
-  git apply 3958.diff
   ./autogen.sh
 }
 
