@@ -7,44 +7,35 @@
 # Contributor: TDY <tdy@gmx.com>
 
 pkgname=tmux-custom
-_gitname=tmux
-_upstreamver=3.2a
-pkgver=${_upstreamver}
+#_gitname=tmux
+_upstreamver=109d2bda1a7b06948e35b7e08c159e71ebc988fb
+pkgver=109d2bda
 pkgrel=1
 pkgdesc="A terminal multiplexer"
 url="https://github.com/tmux/tmux/wiki"
-arch=('i686' 'x86_64' 'aarch64')
-license=('BSD-2-Clause' 'BSD-3-Clause' 'ISC')
+arch=('x86_64')
+license=('BSD')
 depends=('glibc' 'ncurses' 'libevent')
 makedepends=('git')
 depends+=('libutempter') && _addconfigureflags+="--enable-utempter "
 #depends+=('libutf8proc') && _addconfigureflags+="--enable-utf8proc "
 #depends+=('systemd-libs') && _addconfigureflags+="--enable-systemd "
 #depends+=('libsixel') && _addconfigureflags+="--enable-sixel " # Note support by vte (gnome-terminal) yethttps://www.arewesixelyet.com/#gnome-terminal
-provides=('tmux')
 conflicts=('tmux')
-source=("git+https://github.com/tmux/tmux.git#tag=${_upstreamver}")
-b2sums=('82d25d7ca6bad798d50f1306cb7cb60ee96486721f5b9338c6591ee11c372ab52d0f41d8cbb9d701aa1036feed605d17891c9fa956c1136546b5198c5f5c02b7')
-prepare() {
-  cd ${_gitname}
-  ./autogen.sh
-}
+source=("git+https://github.com/tmux/tmux.git#commit=${_upstreamver}")
+b2sums=('f1c4a14c71107e1fed9c47923b0da425b1ff33de7d35bffa8f656fff47a9a412cfcb42e8bcbe0e22251f37ba71769eb398b25d8d9b29cfd934caf2dde68cc47f')
 
 build() {
-  cd ${_gitname}
+  cd "$srcdir/tmux"
+  git clean -xdf
+  ./autogen.sh
   ./configure --prefix=/usr ${_addconfigureflags}
   make
 }
 
 package() {
-  cd ${_gitname}
-
+  cd "$srcdir/tmux"
   make DESTDIR="${pkgdir}" install
-  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
-  sed -n '2,14p' compat/daemon-darwin.c > "${pkgdir}/usr/share/licenses/${pkgname}/ISC-LICENSE"
-  sed -n '18,45p' compat/daemon-darwin.c > "${pkgdir}/usr/share/licenses/${pkgname}/BSD-2-Clause-LICENSE"
-  sed -n '5,33p' compat/bitstring.h > "${pkgdir}/usr/share/licenses/${pkgname}/BSD-3-Clause-LICENSE"
 
-  # install example config file
-  #install -Dm755 example_tmux.conf "${pkgdir}/usr/share/tmux/example_tmux.conf"
+  install -D -m0644 COPYING "$pkgdir/usr/share/licenses/tmux/LICENSE"
 }
