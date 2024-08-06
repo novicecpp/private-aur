@@ -7,9 +7,8 @@
 # Contributor: TDY <tdy@gmx.com>
 
 pkgname=tmux-custom
-#_gitname=tmux
-_upstreamver=109d2bda1a7b06948e35b7e08c159e71ebc988fb
-pkgver=109d2bda
+_upstreamver=651891c3bd32ecc4671e8e3e36efc10d48ca0654
+pkgver=master.r2.${_upstreamver:0:8}
 pkgrel=1
 pkgdesc="A terminal multiplexer"
 url="https://github.com/tmux/tmux/wiki"
@@ -23,11 +22,10 @@ depends+=('libutempter') && _addconfigureflags+="--enable-utempter "
 #depends+=('libsixel') && _addconfigureflags+="--enable-sixel " # Note support by vte (gnome-terminal) yethttps://www.arewesixelyet.com/#gnome-terminal
 conflicts=('tmux')
 source=("git+https://github.com/tmux/tmux.git#commit=${_upstreamver}")
-b2sums=('f1c4a14c71107e1fed9c47923b0da425b1ff33de7d35bffa8f656fff47a9a412cfcb42e8bcbe0e22251f37ba71769eb398b25d8d9b29cfd934caf2dde68cc47f')
+b2sums=('8209e78c313615782d96daa455c55bcca013578e8c38ffc6395a0a8bf475f708b8f454bd614450dcfaeff5d29e750d4321499d9102f04bdbb3982c3f50406e36')
 
 build() {
   cd "$srcdir/tmux"
-  git clean -xdf
   ./autogen.sh
   ./configure --prefix=/usr ${_addconfigureflags}
   make
